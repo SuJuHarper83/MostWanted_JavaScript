@@ -4,6 +4,11 @@
 */
 //////////////////////////////////////////* Beginning Of Starter Code *//////////////////////////////////////////
 
+// Begin by stepping through the code using the debugger and trying to search for a single person by name, 
+// then displaying information about that person.
+
+// 6. Once you’ve tested the existing searchByName function, begin working on the Search by Traits features.
+
 "use strict";
 //? Utilize the hotkey to hide block level comment documentation
 ////* Mac: Press "CMD"+"K" and then "CMD"+"/"
