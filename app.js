@@ -77,12 +77,15 @@ function mainMenu(person, people) {
         case "family":
             //! TODO #2: Declare a findPersonFamily function //////////////////////////////////////////
             // HINT: Look for a people-collection stringifier utility function to help
+            // I like to make 3 helper funcitons, one to find spouce, one for siblings and one for parents
+            // then I call all of those in my findPersonFamily function and just have to structure the data 
             let personFamily = findPersonFamily(person[0], people);
             alert(personFamily);
             break;
         case "descendants":
             //! TODO #3: Declare a findPersonDescendants function //////////////////////////////////////////
             // HINT: Review recursion lecture + demo for bonus user story
+            // I like to start by just finding children, this action can then be repeated to find their children
             let personDescendants = findPersonDescendants(person[0], people);
             alert(personDescendants);
             break;
@@ -144,15 +147,15 @@ function displayPeople(people) {
  */
 function displayPerson(person) {
     let personInfo = `First Name: ${person.firstName}\n`;
-    personInfo = `Last Name: ${person.lastName}\n`;
-    personInfo = `Gender: ${person.gender}\n`;
-    personInfo = `Date of Birth: ${person.dob}\n`;
-    personInfo = `Height: ${person.height}\n`;
-    personInfo = `Weight: ${person.weight}\n`;
-    personInfo = `Eye Color: ${person.eyeColor}\n`;
-    personInfo = `Occupation: ${person.occupation}\n`;
-    alert(personInfo);
-}
+    personInfo += `Last Name: ${person.lastName}\n`;
+    personInfo += `Gender: ${person.gender}\n`;
+    personInfo += `Date of Birth: ${person.dob}\n`;
+    personInfo += `Height: ${person.height}\n`;
+    personInfo += `Weight: ${person.weight}\n`;
+    personInfo += `Eye Color: ${person.eyeColor}\n`;
+    personInfo += `Occupation: ${person.occupation}\n`;
+    return personInfo
+}   
 // End of displayPerson()
 
 /**
@@ -194,3 +197,91 @@ function chars(input) {
 
 //////////////////////////////////////////* End Of Starter Code *//////////////////////////////////////////
 // Any additional functions can be written below this line 👇. Happy Coding! 😁
+
+function findPersonFamily(person, people) {
+
+    let spouse = findSpouse(person, people);
+    let siblings = findSiblings(person, people);
+    let parents = findParents(person, people); 
+
+    //after all results are found create a string using the results above
+    let finalString = `Spouse: ${spouse.firstName}` + "Siblings: " +`${siblings[0].firstName}` + 
+    "Parents: " +`${parents[0].firstName}`
+
+return finalString
+
+}
+
+
+//move to functions
+function findSpouse (person, people) {
+
+let findSpouse = people.filter(function (el) {
+    if (person.currentSpouse === el.id) {
+        return true;
+    }
+
+});
+
+return findSpouse[0]
+
+}
+
+function findSiblings (person, people) {
+
+let findSiblings = people.filter(function (el) {
+    if(person.parents === el.parents[0] ||
+        person.parents === el.parents[1]){
+            return true;
+    }
+
+});
+
+return findSiblings[0]
+
+}
+
+function findParents(person, people) {
+
+let findParents = people.filter(function (el) {
+    if (person.id === el.parents[0] || person.id === el.parents[1]){
+        return true;
+    }
+
+});
+
+return findParents[0]
+
+}
+
+
+function findPersonDescendants (person,people) {
+
+let findPersonDescendants = people.filter(function (el) {
+    if (person.parents === el.id) {
+        return true;
+    }
+
+});
+
+return findPersonDescendants[0]
+
+}
+
+
+function searchByTrait (person, people) {
+
+let gender = promptFor("What is the person's gender?", chars);
+let eyeColor = promptFor("What is the person's eye color?", chars);
+let occupation = promptFor("What is the person's occupation?", chars);
+
+let personResult = people.filter(function (el) {
+    if (person.gender === gender && person.eyeColor === eyeColor && person.occupation === occupation) {
+        return true;
+    }
+
+return personResult
+
+});
+
+}
