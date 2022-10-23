@@ -36,7 +36,8 @@ function app(people) {
         case "no":
             //! TODO #4: Declare a searchByTraits (multiple traits) function //////////////////////////////////////////
                 //! TODO #4a: Provide option to search for single or multiple //////////////////////////////////////////
-            searchResults = searchByTraits(people);
+            results = searchByTraits(people);
+            alert(results)
             break;
         default:
             // Re-initializes the app() if neither case was hit above. This is an instance of recursion.
@@ -87,7 +88,7 @@ function mainMenu(person, people) {
             // HINT: Review recursion lecture + demo for bonus user story
             // I like to start by just finding children, this action can then be repeated to find their children
             let personDescendants = findPersonDescendants(person[0], people);
-            alert(personDescendants);
+            displayPeople(personDescendants);
             break;
         case "restart":
             // Restart app() from the very beginning
@@ -205,15 +206,15 @@ function findPersonFamily(person, people) {
     let parents = findParents(person, people); 
 
     //after all results are found create a string using the results above
-    let finalString = `Spouse: ${spouse.firstName}` + "Siblings: " +`${siblings[0].firstName}` + 
+    let personFamily = `Spouse: ${spouse.firstName}` + "Siblings: " +`${siblings[0].firstName}` + 
     "Parents: " +`${parents[0].firstName}`
 
-return finalString
+return personFamily
 
 }
 
 
-//move to functions
+//move to helper functions
 function findSpouse (person, people) {
 
 let findSpouse = people.filter(function (el) {
@@ -244,7 +245,8 @@ return findSiblings[0]
 function findParents(person, people) {
 
 let findParents = people.filter(function (el) {
-    if (person.id === el.parents[0] || person.id === el.parents[1]){
+    if (person.id === el.parents[0] || 
+        person.id === el.parents[1]){
         return true;
     }
 
@@ -254,34 +256,111 @@ return findParents[0]
 
 }
 
-
-function findPersonDescendants (person,people) {
-
-let findPersonDescendants = people.filter(function (el) {
-    if (person.parents === el.id) {
-        return true;
-    }
-
-});
-
-return findPersonDescendants[0]
-
+// Find Decendents Recursion
+function findChildren(person, people) {
+    let newArray = people.filter(function(el) {
+        for (let i = 0; i < el.parents.length; i++)
+        if(el.parents[i] === person.id) {
+            return true;
+        }
+    });
+    return newArray;
 }
 
-
-function searchByTrait (person, people) {
-
-let gender = promptFor("What is the person's gender?", chars);
-let eyeColor = promptFor("What is the person's eye color?", chars);
-let occupation = promptFor("What is the person's occupation?", chars);
-
-let personResult = people.filter(function (el) {
-    if (person.gender === gender && person.eyeColor === eyeColor && person.occupation === occupation) {
-        return true;
+function findPersonDescendants(person, people) {
+    let descendants = findChildren(person, people);
+    for(let i = 0; i < descendants.length; i++) {
+        descendants = descendants.concat(findPersonDescendants(descendants[i], people))
     }
+    return descendants;
+}
+// function findPersonDescendants (person, people, descendants = []) {
+//     let newArray = people.filter(function (person){
+//         return person.parents.includes(person.id);
+//     });
+//     if(newArray.length === 0) return [person]
 
-return personResult
+//     descendants = [person];
 
+//     newArray.forEach((person) => {
+//         descendants = [...descendants, ...findPersonDescendants(person,people)]
+//     });
+//     return descendants;
+// }
+
+// {
+//     let personDescendants = person.parents;
+//     people = [];
+//     if (personDescendants.length === 0) {
+//         return people;
+//     }
+
+//     for (let i = 0; i < personDescendants.length; 1++) {
+//         people = people.concat(
+//             findPersonDescendants (personDescendants[i])
+//         );
+//     }
+//     return people;
+// }
+
+
+let personDescendants = {
+    Name: "",
+    decendants: [
+    ],
+};
+
+
+alert(findPersonDescendants(personDescendants));
+
+
+// Find by traits function
+// function searchTrait (people) {
+
+// let userInput = prompt("Please enter the person's occupation: ");
+// let results = people.filter(function (el) {
+//     if (el.occupation.includes(userInput)) {
+//         return true;
+//     }
+// })
+
+// return results
+
+// find by multiple traits
+function searchbyTraits (people) {
+    let userInputColor = prompt("Enter eye color: ");
+    let userInputDOB = prompt("Enter DOB as such: MM/DD/YYYY: ");
+    let results = people.filter(function (el) {
+        if (el[userInputColor].includes(userInputDOB)) {
+            return true;
+        }
+    });
+}
+
+return results
+
+
+// Helper functions
+function findEyeColor (person, people) {
+    let findEyeColor = people.filter(function (el) {
+        if (person.id === el.eyeColor){
+            return true;
+    }
+    
 });
 
-}
+return findEyeColor[0];
+
+};
+
+function findOccupation (person, people) {
+    let findOccupation = people.filter(function (el) {
+        if (person.id === el.occupation){
+            return true;
+    }
+    
+});
+
+return findOccupation[0]
+
+};
