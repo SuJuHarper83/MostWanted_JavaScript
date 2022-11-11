@@ -36,8 +36,8 @@ function app(people) {
         case "no":
             //! TODO #4: Declare a searchByTraits (multiple traits) function //////////////////////////////////////////
                 //! TODO #4a: Provide option to search for single or multiple //////////////////////////////////////////
-            results = searchByTraits(people);
-            alert(results)
+            resultsByTrait = searchByTraits(people);
+            alert(resultsByTrait)
             break;
         default:
             // Re-initializes the app() if neither case was hit above. This is an instance of recursion.
@@ -224,7 +224,7 @@ let findSpouse = people.filter(function (el) {
 
 });
 
-return findSpouse[0]
+return findSpouse;
 
 }
 
@@ -238,7 +238,7 @@ let findSiblings = people.filter(function (el) {
 
 });
 
-return findSiblings[0]
+return findSiblings;
 
 }
 
@@ -252,13 +252,13 @@ let findParents = people.filter(function (el) {
 
 });
 
-return findParents[0]
+return findParents;
 
 }
 
 // Find Decendents Recursion
 function findChildren(person, people) {
-    let newArray = people.filter(function(el) {
+    let newArray = people.filter(function(el, []) {
         for (let i = 0; i < el.parents.length; i++)
         if(el.parents[i] === person.id) {
             return true;
@@ -327,40 +327,55 @@ alert(findPersonDescendants(personDescendants));
 // return results
 
 // find by multiple traits
-function searchbyTraits (people) {
+function searchByTraits (person, people) {
+
+    let results = multiTrait (people);
+    let eyeColor = findEyeColor (person, people);
+    let occupation = findOccupation (person, people);
+
+    let resultsByTrait = `Result(s): ${person.firstName}` +`${person.lastName}`
+
+return resultsByTrait
+
+}
+
+
+function multiTrait (people) {
     let userInputColor = prompt("Enter eye color: ");
     let userInputDOB = prompt("Enter DOB as such: MM/DD/YYYY: ");
-    let results = people.filter(function (el) {
+    let results = people.filter(function (el, []) {
         if (el[userInputColor].includes(userInputDOB)) {
             return true;
         }
     });
-}
 
-return results
+return results[0]
+
+
+}
 
 
 // Helper functions
 function findEyeColor (person, people) {
-    let findEyeColor = people.filter(function (el) {
+    let color = people.filter(function (el, []) {
         if (person.id === el.eyeColor){
             return true;
     }
     
 });
 
-return findEyeColor[0];
+return color[0];
 
 };
 
 function findOccupation (person, people) {
-    let findOccupation = people.filter(function (el) {
+    let work = people.filter(function (el, []) {
         if (person.id === el.occupation){
             return true;
     }
     
 });
 
-return findOccupation[0]
+return work[0]
 
 };
